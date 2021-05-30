@@ -1,15 +1,24 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 if (isset($_POST['submit'])) {
     //connect to database
     include('pdoInc.php');
-
     $username = htmlspecialchars($_POST['username']);
     $password = htmlspecialchars($_POST['password']);
     $confirmPassword = htmlspecialchars($_POST['confirmPassword']);
     $birth = htmlspecialchars($_POST['birthday']);
     $age = htmlspecialchars($_POST['age']);
     $realName = htmlspecialchars($_POST['realName']);
-
+    if (strlen($realName) >= 22 || strlen($username) >= 22 || !is_numeric($age) || (int)$age >= 150 || (int)$age <= 0) {
+        header("Location:..//register.php?error=malicious" . $username);
+        exit();
+    }
+    if ($birth >= date("Y-m-d")) {
+        header("Location:..//register.php?error=malicious" . $username);
+        exit();
+    }
     //errorhandle 
     if (empty($username) || empty($password) || empty($confirmPassword) || empty($birth) || empty($age) || empty($realName)) {
         header("Location:..//register.php?error=emptyfield&&username=" . $username);

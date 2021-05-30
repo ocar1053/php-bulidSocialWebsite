@@ -40,7 +40,7 @@
                     <label for="login__name"><svg class="icon">
                             <use xlink:href="#icon-user"></use>
                         </svg><span class="hidden">Username</span></label>
-                    <input id="login__username" type="text" name="age" class="form__input" placeholder="age" oninput="value=value.replace(/[^\d]/g,'')" required>
+                    <input id="login__username" type="number" name="age" class="form__input" placeholder="age" oninput="value=value.replace(/[^\d]/g,'')" required>
                 </div>
                 <div class="form__field">
                     <label for="login__password"><svg class="icon">
