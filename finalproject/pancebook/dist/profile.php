@@ -1,7 +1,15 @@
 <?php
 session_start();
 include('includes/pdoInc.php');
-
+//Check if user exist
+$sth = $dbh->prepare('SELECT * FROM users WHERE id = ?');
+$sth->execute(array((int)$_GET['id']));
+$rowCount = $sth->rowCount();
+if ($rowCount != 1) {
+    echo "<script type='text/javascript'>alert('不存在的使用者，因此為您傳送到管理員頁面');</script>";
+    echo '
+     <meta http-equiv=REFRESH CONTENT=0;url=profile.php?id=20>';
+}
 // edit personalile
 if (isset($_POST['updatepersonalfile'])) {
     $birth = htmlspecialchars($_POST['updatebirth']);
@@ -44,6 +52,35 @@ if (isset($_POST['updatepersonalfile'])) {
             <meta http-equiv=REFRESH CONTENT=0;url=profile.php?id=' . (int)$_GET['id'] . '>';
     }
 }
+
+//addfriend
+
+if (isset($_POST['action'])) {
+    $sender = $_SESSION['id'];
+    $reciver = $_GET['id'];
+    $action = $_POST['action'];
+
+    //first check if duplicate
+    $sql = "SELECT *  FROM friend_request WHERE sender = $sender AND receiver = $reciver";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        echo json_encode(0);
+        return;
+    }
+
+    //add request
+    if ($action == "addf") {
+        $sql = "INSERT INTO friend_request (sender, receiver) 
+        VALUES ( $sender, $reciver)";
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
+    }
+
+    echo json_encode(1);
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +93,7 @@ if (isset($_POST['updatepersonalfile'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <script src="test.js"></script>
+
 
     <!-- Remember to include jQuery :) -->
 
@@ -91,11 +129,17 @@ if (isset($_POST['updatepersonalfile'])) {
 
                     </li>
                     <li>
-                        <a class="header-menu-tab" href="#2"><span class="icon fontawesome-user scnd-font-color"></span>invite</a>
+                        <a class="header-menu-tab" href="invite.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-user scnd-font-color"></span>用戶</a>
                     </li>
 
                     <li>
-                        <a class="header-menu-tab" href="#5"><span class="icon fontawesome-star-empty scnd-font-color"></span>friend</a>
+                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>request</a>
+                    </li>
+                    <li>
+                        <a class="header-menu-tab" href="friendlist.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>friendlist</a>
+                    </li>
+                    <li>
+                        <a class="header-menu-tab" href="profile.php?&id=<?php echo $_SESSION['id']; ?>"><span></span>個人頁面</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="logout.php"><span></span>sign out</a>
@@ -194,8 +238,55 @@ if (isset($_POST['updatepersonalfile'])) {
                     echo '<label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp真實姓名 :' . $row['realName'] . '</span></label>';
                     echo '<label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp生日 :' . $row['birth'] . '</span></label>';
                     echo '<label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp年齡 :' . $row['age'] . '</span></label>';
-                    if ($row['username'] == $_SESSION['username'])  echo '<p><a href="#ex1" rel="modal:open">edit</a></p>';
+
+                    //edit button
+                    if ($row['username'] == $_SESSION['username']) {
+                        echo '<p><a href="#ex1" rel="modal:open">edit</a></p>';
+                    } else {
+
+                        //to show  button
+                        $sender = $_SESSION['id'];
+                        $reciver = $_GET['id'];
+
+                        //first check already friend or not
+                        $sql = "SELECT *  FROM friends WHERE user_one = $sender AND user_two = $reciver";
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->execute();
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                        if ($row) {
+                            echo '<button disabled data-url="' . $_GET["id"] . '">已是朋友</button>';
+                            exit();
+                        }
+                        $sql = "SELECT *  FROM friends WHERE user_one = $reciver AND user_two = $sender";
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->execute();
+                        if ($row) {
+                            echo '<button disabled data-url="' . $_GET["id"] . '">已是朋友</button>';
+                            exit();
+                        }
+                        // then check be invited or not not?
+                        $sql = "SELECT *  FROM friend_request WHERE sender = $reciver AND receiver =$sender ";
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->execute();
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                        if ($row) {
+                            echo '<a href="request.php?id=' . $_SESSION['id'] . '"><button>回覆對方的好友邀請</button></a>';
+                        } else {
+                            // last check send request or not
+                            $sql = "SELECT *  FROM friend_request WHERE sender = $sender AND receiver = $reciver";
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute();
+                            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                            if ($row) {
+                                echo '<button disabled data-url="' . $_GET["id"] . '">sended</button>';
+                            } else {
+                                echo '<button class="addf" data-url="' . $_GET["id"] . '">加好友</button>';
+                            }
+                        }
+                    }
+
                     ?>
+                    <script src="addfriend.js"></script>
                 </div> <!-- end right-container -->
                 <div class="calendar-month block">
                     <!-- CALENDAR MONTH (RIGHT-CONTAINER) -->

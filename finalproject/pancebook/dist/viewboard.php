@@ -97,6 +97,72 @@ if (isset($_GET['del'])) {
             basename($_SERVER['PHP_SELF']) . '?id=' . (int)$_GET['id'] . '>';
     }
 }
+
+//like and dislike 
+function getLikes($id, $dbh)
+{
+
+    $sql = "SELECT  * FROM rating_info 
+  		  WHERE post_id = $id AND rating_action='like'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return $stmt->rowCount();
+}
+
+// Get total number of dislikes for a particular post
+function getDislikes($id, $dbh)
+{
+    $sql = "SELECT * FROM rating_info 
+  		  WHERE post_id = $id AND rating_action='dislike'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return $stmt->rowCount();
+}
+if (isset($_POST["action"])) {
+    $post_id = $_POST["postid"];
+    $action = $_POST["action"];
+    $user_id = $_SESSION['id'];
+
+    switch ($action) {
+        case 'like':
+            $sql = "INSERT INTO rating_info (user_id, post_id, rating_action) 
+            VALUES ($user_id, $post_id, 'like') 
+            ON DUPLICATE KEY UPDATE rating_action='like'";
+            break;
+        case 'dislike':
+            $sql = "INSERT INTO rating_info (user_id, post_id, rating_action) 
+                     VALUES ($user_id, $post_id, 'dislike') 
+                      ON DUPLICATE KEY UPDATE rating_action='dislike'";
+            break;
+        case 'unlike':
+            $sql = "DELETE FROM rating_info WHERE user_id=$user_id AND post_id=$post_id";
+            break;
+        case 'undislike':
+            $sql = "DELETE FROM rating_info WHERE user_id=$user_id AND post_id=$post_id";
+            break;
+        default:
+            break;
+    }
+    $stmt = $dbh->query($sql);
+    echo getRating($post_id, $dbh);
+    exit; // need but don't know why
+}
+
+function getRating($id, $dbh)
+{
+    $rating = array();
+    $likes_query = "SELECT * FROM rating_info WHERE post_id = $id AND rating_action='like'";
+    $dislikes_query = "SELECT * FROM rating_info 
+		  			WHERE post_id = $id AND rating_action='dislike'";
+    $stmt = $dbh->prepare($likes_query);
+    $stmt->execute();
+    $likes = $stmt->rowCount();
+    $stmt = $dbh->prepare($dislikes_query);
+    $stmt->execute();
+    $dislikes =  $stmt->rowCount();
+    $rating[] = array('likes' => $likes, 'dislikes' => $dislikes);
+    return json_encode($rating);
+}
 ?>
 
 
@@ -106,6 +172,7 @@ if (isset($_GET['del'])) {
 <head>
     <meta charset="UTF-8">
     <title>CodePen - Freebie Interactive Flat Design UI / Only HTML5 &amp; CSS3</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <link rel="stylesheet" href="css/stylei.css">
 </head>
 
@@ -180,6 +247,7 @@ if (isset($_GET['del'])) {
                         <label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp <?php echo '主題：<input name="title" maxlength="100"><br>'; ?> </span></label>
                         <label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp <?php echo '內容：<textarea name="content" style="vertical-align: middle;" ></textarea>'; ?> </span></label>
                         <label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp <?php echo '附件: <input type="file" name="file">' . '<input type="submit" name="submit">'; ?> </span></label>
+
                     </form>
                     <br>
                     <hr>
@@ -190,15 +258,32 @@ if (isset($_GET['del'])) {
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         $newDir =   "./includes/uploads";
                         if ($row["fileupload"] == NULL) {
-                            echo '<a href="viewThread.php?&id=' . $row['id'] . '"><label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp' . "討論主題: " .  htmlspecialchars($row['title'])   . '</span></label></a>';
+                            echo '<label class="menu-box-tab" " style=" background: #50597b;"><a href="viewThread.php?&id=' . $row['id'] . '">
+                            <span>&nbsp' . "討論主題: " .  htmlspecialchars($row['title'])   . '</span>
+                            </a>&nbsp
+                            <button class="o-up like-btn" data-id="' . $row['id'] . '">like</button>
+                            <span class="likes">' . getLikes($row['id'], $dbh) . ' </span>
+                            &nbsp;
+                            <button class="o-down dislike-btn" data-id="' . $row['id'] . '">dislike</button>
+                            <span class="dislikes">' . getdisLikes($row['id'], $dbh) . '</span>
+                            </label>  ';
                         } else {
-                            echo '<a href="viewThread.php?&id=' . $row['id'] . '"><label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp' . "討論主題: " .  htmlspecialchars($row['title']) .  '<a href="' . $newDir .  $row['fileupload'] . '" download>附檔 link ↑</a>' . '</span></label></a>';
+                            echo '<label class="menu-box-tab" " style=" background: #50597b;"><a href="viewThread.php?&id=' . $row['id'] . '">
+                            <span>&nbsp' . "討論主題: " .  htmlspecialchars($row['title'])   . '</span>
+                            </a>&nbsp
+                            <button class="o-up like-btn" data-id="' . $row['id'] . '">like</button>
+                            <span class="likes">' . getLikes($row['id'], $dbh) . ' </span>
+                            &nbsp;
+                            <button class="o-down dislike-btn" data-id="' . $row['id'] . '">dislike</button>
+                            <span class="dislikes">' . getdisLikes($row['id'], $dbh) . '</span>
+                            </label>  <a href="' . $newDir .  $row['fileupload'] . '" download>附檔 link ↑</a>';
                         }
                         if ($row['username'] == $_SESSION["username"]) echo '<a href="' .
                             basename($_SERVER['PHP_SELF']) . '?id=' . (int)$_GET['id'] . '&del=' . $row['id'] .
                             '">&nbsp刪除 ↑</a> . <br> ';
                     }
                     ?>
+                    <script src="vote.js"></script>
                 </div>
             </div>
 
