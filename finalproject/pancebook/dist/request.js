@@ -13,7 +13,7 @@ $(document).ready(function () {
 				urlid: urlid,
 			},
 			success: function (data) {
-				alert(data);
+				//alert(data);
 				window.location.reload();
 			},
 		});
@@ -32,7 +32,7 @@ $(document).ready(function () {
 				urlid: urlid,
 			},
 			success: function (data) {
-				alert(data);
+				//alert(data);
 				window.location.reload();
 			},
 		});

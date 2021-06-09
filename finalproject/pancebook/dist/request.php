@@ -6,6 +6,18 @@ if ($_GET['id'] != $_SESSION['id']) {
     exit();
 }
 
+function cantor_pair_calculate($x, $y) // get unique chatrooomid
+{
+    $temp = $x;
+    if ($x > $y) // sort
+    {
+        $x = $y;
+        $y = $temp;
+    }
+    return (($x + $y) * ($x + $y + 1)) / 2 + $y;
+}
+
+
 //request handle
 if (isset($_POST["action"])) {
     $post_id = $_POST["urlid"];
@@ -15,13 +27,17 @@ if (isset($_POST["action"])) {
     }
     $sender = null;
     $action = $_POST["action"];
-    $table = (int)$_POST["tableid"];
+
+
+    $decode = base64_decode($_POST["tableid"]); //解密 
+    $table = (int)$decode;
+    $receiver = $_SESSION['id'];
     //check receiver
     $sql = "SELECT * FROM friend_request WHERE  id = $table";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
-
-    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { // check if exist
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) { // check if exist
         if ($row['receiver'] != $_SESSION['id']) {
             echo "<script type='text/javascript'>alert('錯誤');</script>";
             echo '<meta http-equiv=REFRESH CONTENT=0;url=request.php?&id=' . $_SESSION['id'] . '>';
@@ -29,28 +45,38 @@ if (isset($_POST["action"])) {
             $sender = $row['sender'];
         }
     } else {
-        echo "<script type='text/javascript'>alert('錯誤');</script>";
-        echo '<meta http-equiv=REFRESH CONTENT=0;url=request.php?&id=' . $_SESSION['id'] . '>';
+        header('Location:..//request.php?id=' . $_SESSION['id'] . '');
+        exit();
     }
 
 
     //delete old pending
     if ($action == "ac") {
-        $sql = "DELETE FROM friend_request WHERE id = $table";
-        $stmt = $dbh->query($sql);
+        $sql = "DELETE FROM friend_request WHERE id = ?";
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute(array($table));
     } else if ($action == "refuse") {
-        $sql = "DELETE FROM friend_request WHERE id = $table";
-        $stmt = $dbh->query($sql);
-
+        $sql = "DELETE FROM friend_request WHERE id = ?";
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute(array($table));
         echo json_encode(123);
-        return;
+        return;  //refuse stop here
     }
+
+
     //add as friend
     $sql = "INSERT INTO friends (user_one, user_two) 
-    VALUES ($post_id, $sender)";
-    $stmt = $dbh->query($sql);
+    VALUES (?, ?)";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array($post_id, $sender));
+    //add chat room for them
+    $sql = "INSERT INTO chatroomlist (roomid) 
+    VALUES (?)";
+    $stmt = $dbh->prepare($sql);
+    $roomid = cantor_pair_calculate($sender, $receiver);
+    $stmt->execute(array($roomid));
 
-    echo json_encode(123);
+    echo json_encode($table);
 }
 ?>
 <!DOCTYPE html>
@@ -126,23 +152,29 @@ if (isset($_POST["action"])) {
             </div>
             <div class="middle-container container" style="width: 600px;height: 190px;">
                 <?php
-                $stmt = $dbh->prepare("SELECT *
+                $stmt = $dbh->prepare("SELECT *, users.id AS NEW
                 FROM users
                 JOIN friend_request
                 ON friend_request.sender = users.id
                 WHERE status = 'pending' AND receiver = ? ");
                 $stmt->execute(array($_GET['id']));
-                while (($row = $stmt->fetch(PDO::FETCH_ASSOC)))
+                while (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+
+                    //加密
+                    $rowid = strval($row['id']);
+                    $rowing = base64_encode($rowid);
                     echo '<label class="menu-box-tab" " style=" background: #50597b;">&nbsp;&nbsp;' . $row['username'] .
                         '&nbsp<button class="ac"
-                    data-tableid="' . $row['id'] . '"
-                     data-id="' . $row['receiver'] . '"
-                     > 同意</button>' .
+                data-tableid="' . $rowing . '"
+                 data-id="' . $row['receiver'] . '"
+                 > 同意</button>' .
                         '&nbsp<button class="refuse" 
-                    data-tableid="' . $row['id'] . '"
-                    data-id="' . $row['receiver'] . '"
-                    > 不同意</button>' .
-                        '</label>';
+                data-tableid="' . $rowing . '"
+                data-id="' . $row['receiver'] . '"
+                > 不同意</button>' .
+
+                        '&nbsp;&nbsp;<a href="profile.php?&id=' . $row['NEW'] . '">個人檔案</a>' . '</label>';
+                }
 
                 ?>
             </div>

@@ -1,7 +1,24 @@
 <?php
 session_start();
 include('includes/pdoInc.php');
+if ($_GET['id'] != $_SESSION['id']) {
+    header("Location:..//message.php?&id=" . $_SESSION['id']);
+    exit();
+}
 
+function cantor_pair_calculate($x, $y) // get unique chatrooomid 
+{
+    $temp = $x;
+    if ($x > $y) // sort
+    {
+        $x = $y;
+        $y = $temp;
+    }
+
+    $roomid = (($x + $y) * ($x + $y + 1)) / 2 + $y; // 加密
+    $roomid = base64_encode($roomid);
+    return $roomid;
+}
 
 ?>
 <!DOCTYPE html>
@@ -56,6 +73,7 @@ include('includes/pdoInc.php');
                 </ul>
 
             </header>
+
             <!-- LEFT-CONTAINER -->
             <div class="left-container container">
                 <div>
@@ -76,20 +94,24 @@ include('includes/pdoInc.php');
             </div>
             <div class="middle-container container" style="width: 600px;height: 190px;">
                 <?php
+                $sql = "SELECT * FROM friends WHERE user_one = ? or user_two = ?";
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute(array($_SESSION['id'], $_SESSION['id']));
 
-                $stmt = $dbh->prepare("SELECT *
-                FROM users");
-                $stmt->execute();
+                //show friendlist
                 while (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
-                    if ($row["username"] == $_SESSION["username"]) {
-                        continue;
+                    if ($row['user_one'] == $_SESSION['id']) {
+                        $sth = $dbh->prepare("SELECT * FROM users WHERE id = ?");
+                        $sth->execute(array($row["user_two"]));
+                        $answer = $sth->fetch(PDO::FETCH_ASSOC);
+                        echo '<label class="menu-box-tab" " style=" background: #50597b;">' . $answer["username"] . ' <a href="chat.php?id=' . cantor_pair_calculate($_SESSION['id'], $answer['id']) . '">聊天室連結</a></label>';
+                    } else {
+                        $sth = $dbh->prepare("SELECT * FROM users WHERE id = ?");
+                        $sth->execute(array($row["user_one"]));
+                        $answer = $sth->fetch(PDO::FETCH_ASSOC);
+                        echo '<label class="menu-box-tab" " style=" background: #50597b;">' . $answer["username"] . '<a href="chat.php?id=' . cantor_pair_calculate($_SESSION['id'], $answer['id']) . '">聊天室連結</a></label>';
                     }
-                    echo '<label class="menu-box-tab" " style=" background: #50597b;">&nbsp;&nbsp;' . $row['username'] .
-                        '&nbsp
-                        <a href="profile.php?id=' . $row['id'] . '">個人檔案連結</a>' .
-                        '</label>';
                 }
-
                 ?>
             </div>
 

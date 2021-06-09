@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-06-05 08:41:00
+-- 產生時間： 2021-06-08 17:00:28
 -- 伺服器版本： 10.4.18-MariaDB
 -- PHP 版本： 8.0.3
 
@@ -20,6 +20,49 @@ SET time_zone = "+00:00";
 --
 -- 資料庫： `finalproject`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `chat`
+--
+
+CREATE TABLE `chat` (
+  `id` int(11) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `nickname` varchar(512) NOT NULL,
+  `msg` varchar(512) NOT NULL,
+  `ip` varchar(64) NOT NULL,
+  `pairid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- 傾印資料表的資料 `chat`
+--
+
+INSERT INTO `chat` (`id`, `time`, `nickname`, `msg`, `ip`, `pairid`) VALUES
+(2, '2021-06-08 14:33:07', 'pan', 'dasdsa', '::1', 882),
+(3, '2021-06-08 14:38:38', 'pan', 'asza', '::1', 882),
+(4, '2021-06-08 14:48:11', 'panpan', 'kando', '::1', 1014);
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `chatroomlist`
+--
+
+CREATE TABLE `chatroomlist` (
+  `id` int(11) NOT NULL,
+  `roomid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- 傾印資料表的資料 `chatroomlist`
+--
+
+INSERT INTO `chatroomlist` (`id`, `roomid`) VALUES
+(2, 882),
+(3, 1014);
 
 -- --------------------------------------------------------
 
@@ -95,9 +138,8 @@ CREATE TABLE `friends` (
 --
 
 INSERT INTO `friends` (`id`, `user_one`, `user_two`) VALUES
-(13, 21, 20),
-(15, 24, 21),
-(16, 20, 24);
+(31, 20, 21),
+(32, 24, 20);
 
 -- --------------------------------------------------------
 
@@ -132,9 +174,11 @@ INSERT INTO `rating_info` (`user_id`, `post_id`, `rating_action`) VALUES
 (1, 300, 'like'),
 (2, 287, 'like'),
 (2, 301, 'like'),
+(20, 284, 'dislike'),
 (20, 287, 'like'),
 (20, 300, 'like'),
 (20, 301, 'like'),
+(20, 306, 'like'),
 (21, 284, 'like'),
 (21, 287, 'dislike');
 
@@ -168,6 +212,18 @@ INSERT INTO `users` (`id`, `username`, `realName`, `birth`, `age`, `password`, `
 --
 -- 已傾印資料表的索引
 --
+
+--
+-- 資料表索引 `chat`
+--
+ALTER TABLE `chat`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 資料表索引 `chatroomlist`
+--
+ALTER TABLE `chatroomlist`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 資料表索引 `dz_board`
@@ -210,6 +266,18 @@ ALTER TABLE `users`
 --
 
 --
+-- 使用資料表自動遞增(AUTO_INCREMENT) `chat`
+--
+ALTER TABLE `chat`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `chatroomlist`
+--
+ALTER TABLE `chatroomlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- 使用資料表自動遞增(AUTO_INCREMENT) `dz_board`
 --
 ALTER TABLE `dz_board`
@@ -225,13 +293,13 @@ ALTER TABLE `dz_thread`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `friends`
 --
 ALTER TABLE `friends`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `friend_request`
 --
 ALTER TABLE `friend_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `users`

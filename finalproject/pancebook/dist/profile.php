@@ -10,6 +10,7 @@ if ($rowCount != 1) {
     echo '
      <meta http-equiv=REFRESH CONTENT=0;url=profile.php?id=20>';
 }
+
 // edit personalile
 if (isset($_POST['updatepersonalfile'])) {
     $birth = htmlspecialchars($_POST['updatebirth']);
@@ -60,8 +61,37 @@ if (isset($_POST['action'])) {
     $reciver = $_GET['id'];
     $action = $_POST['action'];
 
+
+    //if you already friend, can not request
+    $sql = "SELECT * FROM friends WHERE user_one = ? AND user_two = ?";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array($sender, $reciver));
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        echo json_encode(0);
+        return;
+    }
+    //check again mirror 
+    $sql = "SELECT * FROM friends WHERE user_one = ? AND user_two = ?";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array($reciver, $sender));
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        echo json_encode(0);
+        return;
+    }
+
     //first check if duplicate
     $sql = "SELECT *  FROM friend_request WHERE sender = $sender AND receiver = $reciver";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        echo json_encode(0);
+        return;
+    }
+    //check again mirror
+    $sql = "SELECT *  FROM friend_request WHERE sender = $reciver AND receiver = $sender";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -73,9 +103,9 @@ if (isset($_POST['action'])) {
     //add request
     if ($action == "addf") {
         $sql = "INSERT INTO friend_request (sender, receiver) 
-        VALUES ( $sender, $reciver)";
+        VALUES ( ?, ?)";
         $stmt = $dbh->prepare($sql);
-        $stmt->execute();
+        $stmt->execute(array($sender, $reciver));
     }
 
     echo json_encode(1);
@@ -125,18 +155,18 @@ if (isset($_POST['action'])) {
                 <ul class="header-menu horizontal-list">
 
                     <li>
-                        <a class="header-menu-tab" href="#3"><span class="icon fontawesome-envelope scnd-font-color"></span>Messages</a>
+                        <a class="header-menu-tab" href="message.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-envelope scnd-font-color"></span>Messages</a>
 
                     </li>
                     <li>
-                        <a class="header-menu-tab" href="invite.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-user scnd-font-color"></span>用戶</a>
+                        <a class="header-menu-tab" href="invite.php"><span class="icon fontawesome-user scnd-font-color"></span>用戶</a>
                     </li>
 
                     <li>
-                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>request</a>
+                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>request</a>
                     </li>
                     <li>
-                        <a class="header-menu-tab" href="friendlist.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>friendlist</a>
+                        <a class="header-menu-tab" href="friendlist.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>friendlist</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="profile.php?&id=<?php echo $_SESSION['id']; ?>"><span></span>個人頁面</a>
@@ -246,7 +276,7 @@ if (isset($_POST['action'])) {
 
                         //to show  button
                         $sender = $_SESSION['id'];
-                        $reciver = $_GET['id'];
+                        $reciver = (int)$_GET['id'];
 
                         //first check already friend or not
                         $sql = "SELECT *  FROM friends WHERE user_one = $sender AND user_two = $reciver";
@@ -254,14 +284,15 @@ if (isset($_POST['action'])) {
                         $stmt->execute();
                         $row = $stmt->fetch(PDO::FETCH_ASSOC);
                         if ($row) {
-                            echo '<button disabled data-url="' . $_GET["id"] . '">已是朋友</button>';
+                            echo '<button disabled data-url="' . (int)$_GET["id"] . '">已是朋友</button>';
                             exit();
                         }
                         $sql = "SELECT *  FROM friends WHERE user_one = $reciver AND user_two = $sender";
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute();
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
                         if ($row) {
-                            echo '<button disabled data-url="' . $_GET["id"] . '">已是朋友</button>';
+                            echo '<button disabled data-url="' . (int)$_GET["id"] . '">已是朋友</button>';
                             exit();
                         }
                         // then check be invited or not not?
@@ -278,9 +309,9 @@ if (isset($_POST['action'])) {
                             $stmt->execute();
                             $row = $stmt->fetch(PDO::FETCH_ASSOC);
                             if ($row) {
-                                echo '<button disabled data-url="' . $_GET["id"] . '">sended</button>';
+                                echo '<button disabled data-url="' . (int)$_GET["id"] . '">sended</button>';
                             } else {
-                                echo '<button class="addf" data-url="' . $_GET["id"] . '">加好友</button>';
+                                echo '<button class="addf" data-url="' . (int)$_GET["id"] . '">加好友</button>';
                             }
                         }
                     }
