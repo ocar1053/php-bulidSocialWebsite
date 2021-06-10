@@ -16,17 +16,18 @@ if (isset($_POST['submit']) && isset($_GET['id']) && isset($_FILES['file']) && $
     $newFilePath = $newDir .  $newFileName; // final path
     if (empty($title) || empty($content)) {
         echo "<script type='text/javascript'>alert('請填寫完整資料');</script>";
-        echo '<meta http-equiv=REFRESH CONTENT=0;url=viewBoard.php?id=' . (int)$_GET['id'] . '>';
+        echo '<meta http-equiv=REFRESH CONTENT=0;url=viewboard.php?id=' . (int)$_GET['id'] . '>';
     } else if (empty($_SESSION['id'])) {
         echo "<script type='text/javascript'>alert('訪客不可發表主題');</script>";
-        echo '<meta http-equiv=REFRESH CONTENT=0;url=viewBoard.php?id=' . (int)$_GET['id'] . '>';
+        echo '<meta http-equiv=REFRESH CONTENT=0;url=viewboard.php?id=' . (int)$_GET['id'] . '>';
     } else {
         if (in_array($extension, $blackList) && $_FILES["file"]["size"] <= 1024 * 1024) {
 
             move_uploaded_file($_FILES["file"]["tmp_name"], $newFilePath);
         } else {
             echo "<script type='text/javascript'>alert('不合法的檔案');</script>";
-            echo '<meta http-equiv=REFRESH CONTENT=0;url=viewBoard.php?id=' . (int)$_GET['id'] . '>';
+            echo '<meta http-equiv=REFRESH CONTENT=0;url=viewboard.php?id=' . (int)$_GET['id'] . '>';
+            exit();
         }
         $stmtBoard = $dbh->prepare('SELECT id, name FROM dz_board WHERE id = ?'); //query for "board"
         $stmtBoard->execute(array((int)$_GET['id']));
@@ -43,7 +44,7 @@ if (isset($_POST['submit']) && isset($_GET['id']) && isset($_FILES['file']) && $
                 $newFileName,
             ));
             echo "<script type='text/javascript'>alert('發表成功');</script>";
-            echo '<meta http-equiv=REFRESH CONTENT=0;url=viewBoard.php?id=' . (int)$_GET['id'] . '>';
+            echo '<meta http-equiv=REFRESH CONTENT=0;url=viewboard.php?id=' . (int)$_GET['id'] . '>';
         }
     }
     // second situation -> you don't want to update file   
@@ -52,10 +53,10 @@ if (isset($_POST['submit']) && isset($_GET['id']) && isset($_FILES['file']) && $
     $content = htmlspecialchars($_POST['content']);
     if (empty($title) || empty($content)) {
         echo "<script type='text/javascript'>alert('請填寫完整資料');</script>";
-        echo '<meta http-equiv=REFRESH CONTENT=0;url=viewBoard.php?id=' . (int)$_GET['id'] . '>';
+        echo '<meta http-equiv=REFRESH CONTENT=0;url=viewboard.php?id=' . (int)$_GET['id'] . '>';
     } else if (empty($_SESSION['id'])) {
         echo "<script type='text/javascript'>alert('訪客不可發表主題');</script>";
-        echo '<meta http-equiv=REFRESH CONTENT=0;url=viewBoard.php?id=' . (int)$_GET['id'] . '>';
+        echo '<meta http-equiv=REFRESH CONTENT=0;url=viewboard.php?id=' . (int)$_GET['id'] . '>';
     } else {
         $stmtBoard = $dbh->prepare('SELECT id, name FROM dz_board WHERE id = ?'); //query for "board"
         $stmtBoard->execute(array((int)$_GET['id']));
@@ -71,7 +72,7 @@ if (isset($_POST['submit']) && isset($_GET['id']) && isset($_FILES['file']) && $
                 $_SERVER['REMOTE_ADDR']
             ));
             echo "<script type='text/javascript'>alert('發表成功');</script>";
-            echo '<meta http-equiv=REFRESH CONTENT=0;url=viewBoard.php?id=' . (int)$_GET['id'] . '>';
+            echo '<meta http-equiv=REFRESH CONTENT=0;url=viewboard.php?id=' . (int)$_GET['id'] . '>';
         }
     }
 }
@@ -171,7 +172,7 @@ function getRating($id, $dbh)
 
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - Freebie Interactive Flat Design UI / Only HTML5 &amp; CSS3</title>
+    <title>pancebook</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <link rel="stylesheet" href="css/stylei.css">
 </head>
@@ -195,13 +196,16 @@ function getRating($id, $dbh)
                     </li>
 
                     <li>
-                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>request</a>
+                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-check scnd-font-color"></span>request</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="friendlist.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>friendlist</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="profile.php?&id=<?php echo $_SESSION['id']; ?>"><span></span>個人頁面</a>
+                    </li>
+                    <li>
+                        <a class="header-menu-tab" href="change.php"><span></span>更改密碼</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="logout.php"><span></span>sign out</a>
@@ -264,7 +268,7 @@ function getRating($id, $dbh)
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         $newDir =   "./includes/uploads";
                         if ($row["fileupload"] == NULL) {
-                            echo '<label class="menu-box-tab" " style=" background: #50597b;"><a href="viewThread.php?&id=' . $row['id'] . '">
+                            echo '<label class="menu-box-tab" " style=" background: #50597b;"><a href="viewthread.php?&id=' . $row['id'] . '">
                             <span>&nbsp' . "討論主題: " .  htmlspecialchars($row['title'])   . '</span>
                             </a>&nbsp
                             <button class="o-up like-btn" data-id="' . $row['id'] . '">like</button>
@@ -274,7 +278,7 @@ function getRating($id, $dbh)
                             <span class="dislikes">' . getdisLikes($row['id'], $dbh) . '</span>
                             </label>  ';
                         } else {
-                            echo '<label class="menu-box-tab" " style=" background: #50597b;"><a href="viewThread.php?&id=' . $row['id'] . '">
+                            echo '<label class="menu-box-tab" " style=" background: #50597b;"><a href="viewthread.php?&id=' . $row['id'] . '">
                             <span>&nbsp' . "討論主題: " .  htmlspecialchars($row['title'])   . '</span>
                             </a>&nbsp
                             <button class="o-up like-btn" data-id="' . $row['id'] . '">like</button>
@@ -289,7 +293,7 @@ function getRating($id, $dbh)
                             '">&nbsp刪除 ↑</a> . <br> ';
                     }
                     ?>
-                    <script src="vote.js"></script>
+                    <script src="js/vote.js"></script>
                 </div>
             </div>
 

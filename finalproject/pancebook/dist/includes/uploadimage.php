@@ -17,6 +17,7 @@ if (isset($_POST['submit']) &&  $_SESSION['id'] == $_GET['id'] && isset($_FILES[
     } else {
         echo "<script type='text/javascript'>alert('不合法的檔案');</script>";
         echo '<meta http-equiv=REFRESH CONTENT=0;url=../profile.php?id=' . (int)$_GET['id'] . '>';
+        exit();
     }
     $stmt = $dbh->prepare('SELECT * FROM users WHERE id = ?'); //query for "board"
     $stmt->execute(array((int)$_GET['id']));

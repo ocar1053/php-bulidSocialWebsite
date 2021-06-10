@@ -16,7 +16,7 @@
 
         <div class="grid">
 
-            <form action="https://httpbin.org/post" method="POST" class="form login">
+            <form action="includes/change_inc.php" method="POST" class="form login">
 
                 <div class="form__field">
                     <label for="login__username"><svg class="icon">
@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="form__field">
-                    <input type="submit" value="change password">
+                    <input type="submit" name="submit" value="change password">
                 </div>
 
             </form>

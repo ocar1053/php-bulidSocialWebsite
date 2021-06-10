@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - Login</title>
+    <title>register</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
@@ -28,19 +28,23 @@
                     <label for="login__name"><svg class="icon">
                             <use xlink:href="#icon-user"></use>
                         </svg><span class="hidden">Username</span></label>
-                    <input autocomplete="username" id="login__username" type="text" name="realName" class="form__input" placeholder="realName" oninput="value=this.value.replace(/[^a-zA-Z]/g,'')" required>
+                    <input autocomplete="username" id="loginrealname" type="text" name="realName" class="form__input" placeholder="realName" oninput="value=this.value.replace(/[^a-zA-Z]/g,'')" required>
                 </div>
                 <div class="form__field">
                     <label for="login__name"><svg class="icon">
-                            <use xlink:href="#icon-user"></use>
+                            <use xlink:href=""></use>
                         </svg><span class="hidden">Username</span></label>
-                    <input id="login__username" type="date" name="birthday" class="form__input" placeholder="birthday" required>
+                    <input id="login__date" type="date" name="birthday" class="form__input" placeholder="birthday" style="
+    background-color: #3b4148;
+" required>
                 </div>
                 <div class="form__field">
                     <label for="login__name"><svg class="icon">
-                            <use xlink:href="#icon-user"></use>
+                            <use xlink:href=""></use>
                         </svg><span class="hidden">Username</span></label>
-                    <input id="login__username" type="number" name="age" class="form__input" placeholder="age" oninput="value=value.replace(/[^\d]/g,'')" required>
+                    <input id="login__number" type="number" name="age" class="form__input" placeholder="age" oninput="value=value.replace(/[^\d]/g,'')" style="
+    background-color: #3b4148;
+" required>
                 </div>
                 <div class="form__field">
                     <label for="login__password"><svg class="icon">

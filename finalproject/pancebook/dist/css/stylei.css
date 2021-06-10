@@ -62,9 +62,8 @@
 }
 
 body {
-	background: #1f253d;
+	background-image: url("../includes/bg.jpg");
 }
-
 ul {
 	list-style-type: none;
 	margin: 0;
@@ -232,7 +231,7 @@ input[type="text"]:focus {
 }
 .big-profile-picture {
 	margin: 0 auto;
-	border: 5px solid #50597b;
+
 	width: 150px;
 	height: 150px;
 }
@@ -247,7 +246,7 @@ input[type="text"]:focus {
 .main-container {
 	font-family: "Ubuntu", sans-serif;
 	width: 970px;
-	height: 1725px;
+	height: 100%;
 	margin: 6em auto;
 }
 /*********************************************** HEADER ***********************************************/
@@ -331,7 +330,7 @@ header {
 
 .block {
 	margin-bottom: 25px;
-	background: #394264;
+	background: #020202b4;
 	border-radius: 5px;
 }
 /******************************************** LEFT CONTAINER *****************************************/
@@ -341,7 +340,7 @@ header {
 	height: 360px;
 }
 .menu-box .titular {
-	background: #11a8ab;
+	background: #00000088;
 }
 .menu-box-menu .icon {
 	display: inline-block;
@@ -374,7 +373,7 @@ header {
 	transition: background 0.2s;
 }
 .menu-box-tab:hover {
-	background: #50597b;
+	background: #50597b5b;
 	border-top: 1px solid #1f253d;
 	text-decoration: none;
 }
@@ -1147,7 +1146,7 @@ p.center-date {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border: 10px solid #50597b;
+
 	font-size: 3.5rem;
 	border-radius: 50%;
 	position: relative;
@@ -1168,4 +1167,88 @@ p.center-date {
 	color: #ffffff;
 	opacity: 1;
 	font-size: 1.5rem;
+}
+/********************************************* weather ****************************************/
+.weather-app {
+	background-color: rgba(0, 0, 0, 0.096);
+	justify-content: left;
+	align-items: left;
+	height: 100%;
+	margin: 0;
+	font-family: "Open Sans", sans-serif;
+	font-size: 120%;
+}
+
+.card {
+	color: white;
+	padding: 2em;
+	border-radius: 30px;
+	width: 100%;
+	max-width: 420px;
+	margin: 1em;
+}
+
+.search {
+	display: flex;
+	align-items: left;
+	justify-content: left;
+}
+
+.btnweather {
+	margin: 0.5em;
+	border-radius: 50%;
+	border: none;
+	height: 44px;
+	width: 44px;
+	outline: none;
+	background: #7c7c7c2b;
+	color: white;
+	cursor: pointer;
+	transition: 0.2s ease-in-out;
+}
+
+input.search-bar {
+	border: none;
+	outline: none;
+	padding: 0.4em 1em;
+	border-radius: 24px;
+	background: #7c7c7c2b;
+	color: white;
+	font-family: inherit;
+	font-size: 105%;
+	width: calc(100% - 100px);
+}
+
+button:hover {
+	background: #7c7c7c6b;
+}
+
+h1.temp {
+	margin: 0;
+	margin-bottom: 0.4em;
+}
+
+.flex {
+	display: flex;
+	align-items: center;
+}
+
+.description {
+	text-transform: capitalize;
+	margin-left: 8px;
+}
+
+.weather.loading {
+	visibility: hidden;
+	max-height: 20px;
+	position: relative;
+}
+
+.weather.loading:after {
+	visibility: visible;
+	content: "Loading...";
+	color: white;
+	position: absolute;
+	top: 0;
+	left: 20px;
 }

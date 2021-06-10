@@ -9,8 +9,9 @@ if (isset($_POST['submit'])) {
 
     //errorhandle 
     if (empty($username) || empty($password)) {
-        header("Location:..//login.php?error=emptyfield");
-        exit();
+        echo "<script type='text/javascript'>alert('empyt filed!');</script>";
+        echo '
+            <meta http-equiv=REFRESH CONTENT=0;url=../login.php>';
     } else {
         $sql = "SELECT * FROM users WHERE username = ?";
         $stmt = $dbh->prepare($sql);
@@ -18,8 +19,9 @@ if (isset($_POST['submit'])) {
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $passHashCheck = password_verify($password, $row['password']);
             if ($passHashCheck == false) {
-                header("Location:..//login.php?error=errorpassword");
-                exit();
+                echo "<script type='text/javascript'>alert('error password!');</script>";
+                echo '
+                    <meta http-equiv=REFRESH CONTENT=0;url=../login.php>';
             } elseif ($passHashCheck == true) {
                 session_start();
                 $_SESSION['id'] = $row['id'];
@@ -27,12 +29,14 @@ if (isset($_POST['submit'])) {
                 $_SESSION['adminControl'] = $row['adminControl'];
                 header("Location:..//profile.php?" . "&id=" . $row['id']);
             } else {
-                header("Location:..//login.php?error=errorpassword");
-                exit();
+                echo "<script type='text/javascript'>alert('error password!');</script>";
+                echo '
+                    <meta http-equiv=REFRESH CONTENT=0;url=../login.php>';
             }
         } else {
-            header("Location:..//login.php?error=errorusername");
-            exit();
+            echo "<script type='text/javascript'>alert('error username!');</script>";
+            echo '
+                <meta http-equiv=REFRESH CONTENT=0;url=../login.php>';
         }
     }
 } else {

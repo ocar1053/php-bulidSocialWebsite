@@ -58,13 +58,16 @@ function cantor_pair_calculate($x, $y) // get unique chatrooomid
                     </li>
 
                     <li>
-                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>request</a>
+                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-check scnd-font-color"></span>request</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="friendlist.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>friendlist</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="profile.php?&id=<?php echo $_SESSION['id']; ?>"><span></span>個人頁面</a>
+                    </li>
+                    <li>
+                        <a class="header-menu-tab" href="change.php"><span></span>更改密碼</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="logout.php"><span></span>sign out</a>

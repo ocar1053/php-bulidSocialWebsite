@@ -92,7 +92,6 @@ if (isset($_POST["action"])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link rel="stylesheet" href="css/stylei.css">
-    <script src="test.js"></script>
 </head>
 
 <body>
@@ -108,21 +107,24 @@ if (isset($_POST["action"])) {
                 <ul class="header-menu horizontal-list">
 
                     <li>
-                        <a class="header-menu-tab" href="#3"><span class="icon fontawesome-envelope scnd-font-color"></span>Messages</a>
+                        <a class="header-menu-tab" href="message.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-envelope scnd-font-color"></span>Messages</a>
 
                     </li>
                     <li>
-                        <a class="header-menu-tab" href="invite.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-user scnd-font-color"></span>用戶</a>
+                        <a class="header-menu-tab" href="invite.php"><span class="icon fontawesome-user scnd-font-color"></span>用戶</a>
                     </li>
 
                     <li>
-                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>request</a>
+                        <a class="header-menu-tab" href="request.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-check scnd-font-color"></span>request</a>
                     </li>
                     <li>
-                        <a class="header-menu-tab" href="friendlist.php?&id=<?php echo $_GET['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>friendlist</a>
+                        <a class="header-menu-tab" href="friendlist.php?&id=<?php echo $_SESSION['id']; ?>"><span class="icon fontawesome-star-empty scnd-font-color"></span>friendlist</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="profile.php?&id=<?php echo $_SESSION['id']; ?>"><span></span>個人頁面</a>
+                    </li>
+                    <li>
+                        <a class="header-menu-tab" href="change.php"><span></span>更改密碼</a>
                     </li>
                     <li>
                         <a class="header-menu-tab" href="logout.php"><span></span>sign out</a>
@@ -178,7 +180,7 @@ if (isset($_POST["action"])) {
 
                 ?>
             </div>
-            <script src="request.js"></script>
+            <script src="js/request.js"></script>
 
         </div>
 
