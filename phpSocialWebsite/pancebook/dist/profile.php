@@ -1,5 +1,6 @@
 <?php
 session_start();
+if (!isset($_SESSION['id'])) header("Location:login.php");
 include('includes/pdoInc.php');
 //Check if user exist
 $sth = $dbh->prepare('SELECT * FROM users WHERE id = ?');
@@ -14,6 +15,8 @@ if ($rowCount != 1) {
 // edit personalile
 if (isset($_POST['updatepersonalfile'])) {
     $birth = htmlspecialchars($_POST['updatebirth']);
+    $realName = htmlspecialchars($_POST['updateage']);
+    $age = htmlspecialchars($_POST['updatebirth']);
     if ($birth >= date("Y-m-d")) {
         if (strlen($realName) >= 22  || !is_numeric($age) || (int)$age >= 150 || (int)$age <= 0) {
             header('Location:..//profile.php?id=' . $_GET["id"] . '');

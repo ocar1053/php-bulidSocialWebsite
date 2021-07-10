@@ -1,5 +1,6 @@
 <?php
 session_start();
+if (!isset($_SESSION['id'])) header("Location:login.php");
 include('includes/pdoInc.php');
 
 
@@ -9,7 +10,7 @@ include('includes/pdoInc.php');
 
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - Freebie Interactive Flat Design UI / Only HTML5 &amp; CSS3</title>
+    <title>invite</title>
     <!-- Remember to include jQuery :) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 
@@ -87,7 +88,7 @@ include('includes/pdoInc.php');
                     if ($row["username"] == $_SESSION["username"]) {
                         continue;
                     }
-                    echo '<label class="menu-box-tab" " style=" background: #50597b;">&nbsp;&nbsp;' . $row['username'] .
+                    echo '<label class="menu-box-tab" " style=" background: #50597b;color: white;">&nbsp;&nbsp;' . $row['username'] .
                         '&nbsp
                         <a href="profile.php?id=' . $row['id'] . '">個人檔案連結</a>' .
                         '</label>';

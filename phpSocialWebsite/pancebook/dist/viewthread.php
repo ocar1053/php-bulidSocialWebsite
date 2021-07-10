@@ -1,5 +1,6 @@
 <?php
 session_start();
+if (!isset($_SESSION['id'])) header("Location:login.php");
 include('includes/pdoInc.php');
 
 function showMsg($row, $numFloor)
@@ -7,8 +8,10 @@ function showMsg($row, $numFloor)
     $nn = htmlspecialchars($row['username']);
     $msg = htmlspecialchars($row['content']);
     $msg = str_replace("\n", "<br>", $msg);
+    $msg = str_replace("<script>", "pando", $msg);
+    $msg = str_replace("</script>", "pando", $msg);
     if ($numFloor == 0) {
-        echo '<label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp 討論串主題：' . $row["title"] . '</span></label><br>';
+        echo '<label class="menu-box-tab" " style=" background: #50597b;"><span>&nbsp 討論串主題：' . htmlspecialchars($row["title"]) . '</span></label><br>';
     }
     if ($numFloor + 1 == 1) {
         if ($_SESSION["username"] == $row["username"]) echo '<span>#' . ($numFloor + 1) . '&nbsp' . '</span>' . '<span><a value="' . $row["id"] . '" class="edit" href="#ex1" rel="modal:open">編輯</a></span>';
@@ -146,7 +149,7 @@ if (isset($_GET['del'])) {
 
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - Freebie Interactive Flat Design UI / Only HTML5 &amp; CSS3</title>
+    <title>pancebook</title>
     <!-- Remember to include jQuery :) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 
@@ -154,7 +157,7 @@ if (isset($_GET['del'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link rel="stylesheet" href="css/stylei.css">
-    <script src="test.js"></script>
+    <script src="js/number.js"></script>
 </head>
 
 <body>
@@ -165,7 +168,7 @@ if (isset($_GET['del'])) {
         <div id="ex1" class="modal" style="background:#4d3d6238">
             <form action="viewthread.php?&id=<?php echo (int)$_GET["id"]; ?>" method="post" enctype="multipart/form-data">
 
-                <?php echo '<input type="hidden" name="updateid" id ="updateid">'; ?>
+                <?php echo '<input type="hidden" name="updateid" id ="updateid" >'; ?>
                 <label class="menu-box-tab" style="background: #50597b;"><span>&nbsp <?php if (!empty($_SESSION["username"])) {
                                                                                             echo "暱稱: " . $_SESSION["username"];
                                                                                         } else {

@@ -1,5 +1,6 @@
 <?php
 session_start();
+if (!isset($_SESSION['id'])) header("Location:login.php");
 include('includes/pdoInc.php');
 
 //folling is updload 討論串

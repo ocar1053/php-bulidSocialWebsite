@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>register</title>
+    <title>change</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
@@ -16,7 +16,7 @@
 
         <div class="grid">
 
-            <form action="includes/register_inc.php" method="POST" class="form login">
+            <form action="includes/change_inc.php" method="POST" class="form login">
 
                 <div class="form__field">
                     <label for="login__username"><svg class="icon">
@@ -24,28 +24,7 @@
                         </svg><span class="hidden">Username</span></label>
                     <input autocomplete="username" id="login__username" type="text" name="username" class="form__input" placeholder="Username" required>
                 </div>
-                <div class="form__field">
-                    <label for="login__name"><svg class="icon">
-                            <use xlink:href="#icon-user"></use>
-                        </svg><span class="hidden">Username</span></label>
-                    <input autocomplete="username" id="loginrealname" type="text" name="realName" class="form__input" placeholder="realName" oninput="value=this.value.replace(/[^a-zA-Z]/g,'')" required>
-                </div>
-                <div class="form__field">
-                    <label for="login__name"><svg class="icon">
-                            <use xlink:href=""></use>
-                        </svg><span class="hidden">Username</span></label>
-                    <input id="login__date" type="date" name="birthday" class="form__input" placeholder="birthday" style="
-    background-color: #3b4148;
-" required>
-                </div>
-                <div class="form__field">
-                    <label for="login__name"><svg class="icon">
-                            <use xlink:href=""></use>
-                        </svg><span class="hidden">Username</span></label>
-                    <input id="login__number" type="number" name="age" class="form__input" placeholder="age" oninput="value=value.replace(/[^\d]/g,'')" style="
-    background-color: #3b4148;
-" required>
-                </div>
+
                 <div class="form__field">
                     <label for="login__password"><svg class="icon">
                             <use xlink:href="#icon-lock"></use>
@@ -57,16 +36,23 @@
                     <label for="login__password"><svg class="icon">
                             <use xlink:href="#icon-lock"></use>
                         </svg><span class="hidden">Password</span></label>
-                    <input id="login__password" type="password" name="confirmPassword" class="form__input" placeholder="confirm password" required>
+                    <input id="login__password" type="password" name="changepassword" class="form__input" placeholder="change password" required>
                 </div>
 
                 <div class="form__field">
-                    <input type="submit" name="submit">
+                    <label for="login__password"><svg class="icon">
+                            <use xlink:href="#icon-lock"></use>
+                        </svg><span class="hidden">Password</span></label>
+                    <input id="login__password" type="password" name="confirmchangepassword" class="form__input" placeholder="confirm change password" required>
+                </div>
+
+                <div class="form__field">
+                    <input type="submit" name="submit" value="change password">
                 </div>
 
             </form>
 
-            <p class="text--center">Already have an account? <a href="./login.php">Sign in now</a> <svg class="icon">
+            <p class="text--center">back to sns! <a href="./login.php">Enter</a> <svg class="icon">
                     <use xlink:href="#icon-arrow-right"></use>
                 </svg></p>
 

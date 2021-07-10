@@ -1,8 +1,8 @@
 <?php
 $db_server = "localhost";
-$db_user = "ocar";
-$db_passwd = "d9!@/PnrOnVy-3sH";
-$db_name = "finalproject";
+$db_user = "your user";
+$db_passwd = "your password";
+$db_name = "id16525717_forum";
 
 try {
     $dsn = "mysql:host=$db_server;dbname=$db_name";

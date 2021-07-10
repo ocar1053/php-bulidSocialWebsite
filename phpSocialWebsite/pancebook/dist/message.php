@@ -1,11 +1,25 @@
 <?php
 session_start();
+if (!isset($_SESSION['id'])) header("Location:login.php");
 include('includes/pdoInc.php');
 if ($_GET['id'] != $_SESSION['id']) {
-    header("Location:..//friendlist.php?&id=" . $_SESSION['id']);
+    header("Location:..//message.php?&id=" . $_SESSION['id']);
     exit();
 }
 
+function cantor_pair_calculate($x, $y) // get unique chatrooomid 
+{
+    $temp = $x;
+    if ($x > $y) // sort
+    {
+        $x = $y;
+        $y = $temp;
+    }
+
+    $roomid = (($x + $y) * ($x + $y + 1)) / 2 + $y; // 加密
+    $roomid = base64_encode($roomid);
+    return $roomid;
+}
 
 ?>
 <!DOCTYPE html>
@@ -13,7 +27,7 @@ if ($_GET['id'] != $_SESSION['id']) {
 
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - Freebie Interactive Flat Design UI / Only HTML5 &amp; CSS3</title>
+    <title>message</title>
     <!-- Remember to include jQuery :) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 
@@ -21,7 +35,6 @@ if ($_GET['id'] != $_SESSION['id']) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link rel="stylesheet" href="css/stylei.css">
-    <script src="test.js"></script>
 </head>
 
 <body>
@@ -94,12 +107,12 @@ if ($_GET['id'] != $_SESSION['id']) {
                         $sth = $dbh->prepare("SELECT * FROM users WHERE id = ?");
                         $sth->execute(array($row["user_two"]));
                         $answer = $sth->fetch(PDO::FETCH_ASSOC);
-                        echo '<label class="menu-box-tab" " style=" background: #50597b;">' . $answer["username"] . ' <a href="profile.php?id=' . $answer['id'] . '">個人檔案連結</a></label>';
+                        echo '<label class="menu-box-tab" " style=" background: #50597b;color: white;">' . $answer["username"] . ' <a href="chat.php?id=' . cantor_pair_calculate($_SESSION['id'], $answer['id']) . '"> 聊天室連結</a></label>';
                     } else {
                         $sth = $dbh->prepare("SELECT * FROM users WHERE id = ?");
                         $sth->execute(array($row["user_one"]));
                         $answer = $sth->fetch(PDO::FETCH_ASSOC);
-                        echo '<label class="menu-box-tab" " style=" background: #50597b;">' . $answer["username"] . '<a href="profile.php?id=' . $answer['id'] . '">個人檔案連結</a></label>';
+                        echo '<label class="menu-box-tab" " style=" background: #50597b;color: white;">' . $answer["username"] . '<a href="chat.php?id=' . cantor_pair_calculate($_SESSION['id'], $answer['id']) . '"> 聊天室連結</a></label>';
                     }
                 }
                 ?>
