@@ -64,30 +64,38 @@
 
 ## 功能展示
 
+個人主頁，提供檔案上傳，天氣查詢與個人編輯。
 ![Product Name Screen Shot][personal-screenshot]
 
-個人主頁，提供檔案上傳，天氣查詢與個人編輯。
 <br>
-![Product Name Screen Shot][board-screenshot]
+<br>
 
 提供分類看板與文章討論功能，且支持編輯與刪除使用者自己的留言，提供使用者間互動的功能。
+![Product Name Screen Shot][board-screenshot]
+
 <br>
-![Product Name Screen Shot][ike-screenshot]
+<br>
 
 提供評論討論主題之點讚機制，將點擊的數據存入資料庫進行保存，提供使用者間互動的功能。
+![Product Name Screen Shot][ike-screenshot]
+
 <br>
-![Product Name Screen Shot][friendlist-screenshot]
+<br>
 
 本網站具有好友添加系統，能在按鈕 friendlist 中確認好友狀態，且其提供他人主頁的連結。
+![Product Name Screen Shot][friendlist-screenshot]
+
 <br>
-![Product Name Screen Shot][chatroom-screenshot]
+<br>
 
 以好友添加系統的基礎之上，利用配對函數建立好友之間的私密聊天室，提供私密交流之平台。
+![Product Name Screen Shot][chatroom-screenshot]
+
 <br>
-![Product Name Screen Shot][weather-screenshot]
+<br>
 
 各人主頁的背景圖片將會隨著天氣查詢的地點而改變，此背後的原理是藉由串接圖庫 api，在查詢天氣的同時依照搜索詞搜尋當地圖片
-<br>
+![Product Name Screen Shot][weather-screenshot]
 
 ## 使用技術
 
