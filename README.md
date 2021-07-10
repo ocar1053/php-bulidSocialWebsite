@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <br />
 <p align="center">
 
@@ -112,7 +111,9 @@ Github Link: [https://github.com/ocar1053](https://github.com/ocar1053)
 [ike-screenshot]: images/like.png
 [weather-screenshot]: images/weather.png
 [friendlist-screenshot]: images/firendlist.png
-[chatroom-screenshot]: images/chatroom.png
-=======
+
+# [chatroom-screenshot]: images/chatroom.png
+
 # php-bulidSocialWebsite
->>>>>>> 658047b90d5e3a65caaea6a0330e53a02a4810dc
+
+> > > > > > > 658047b90d5e3a65caaea6a0330e53a02a4810dc
