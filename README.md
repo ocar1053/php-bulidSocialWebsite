@@ -38,6 +38,7 @@
         <li>天氣與對應背景圖片</li>
       </ul>
     </li>
+    <li>所需軟體下載</li>
     <li>使用技術</li>
     <li>貢獻者</li>
     <li>聯絡資料</li>
@@ -103,6 +104,10 @@
 
 ![Product Name Screen Shot][weather-screenshot]
 
+## 所需軟體下載
+
+-   [XAMPP](https://www.apachefriends.org/index.html)
+
 ## 使用技術
 
 -   jQuery AJAX
@@ -124,6 +129,6 @@ Github Link: [https://github.com/ocar1053](https://github.com/ocar1053)
 [personal-screenshot]: images/personalpage.png
 [board-screenshot]: images/board.png
 [ike-screenshot]: images/like.png
-[weather-screenshot]: images/weather.png
+[weathers-screenshot]: images/weather.png
 [friendlist-screenshot]: images/firendlist.png
 [chatroom-screenshot]: images/chatroom.png
